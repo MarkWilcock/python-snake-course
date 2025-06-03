@@ -1,3 +1,6 @@
+# *-dev folders , where I test code for upcoming lesson
+*dev/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
