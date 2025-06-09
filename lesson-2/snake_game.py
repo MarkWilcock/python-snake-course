@@ -25,7 +25,7 @@ COLOUR_RED = (255, 0, 0)
 COLOUR_YELLOW = (255, 255, 0)
 COLOUR_ORANGE = (255, 165, 0)
 
-step 6: listen for the keydown event, check the key pressed and change the colour of the snake based on thse rules:
+step 6: listen for the keydown event, check the key pressed and change the colour of the snake based on these rules:
     B -> blue
     R -> red
     Y -> yellow
@@ -47,6 +47,12 @@ It will draw a COLOUR_GREEN square on a black background and wait for 2 seconds 
 # Each colour is a tuple of COLOUR_RED, COLOUR_GREEN,  Blue  values.  Each value can range from 0 to 255.
 COLOUR_GREEN = (0, 255, 0)
 COLOUR_BLACK = (0, 0, 0)
+COLOUR_BLUE = (0, 0, 255)
+COLOUR_RED = (255, 0, 0)  
+COLOUR_YELLOW = (255, 255, 0)
+COLOUR_ORANGE = (255, 165, 0)
+
+colour = COLOUR_GREEN  # Default colour for the snake
 
 # Initialize Pygame
 pygame.init()
@@ -59,18 +65,42 @@ screen = pygame.display.set_mode((640, 480))
 # Set the title of the window
 pygame.display.set_caption("Python Snake Game")
 
-# Fill the background with black
-screen.fill(COLOUR_BLACK)
+clock = pygame.time.Clock()
 
-# Draw a COLOUR_GREEN square (the snake) at the center of the screen
-# The square is 20x20 pixels in size and is drawn at (320, 240) on the screen.
-# The coordinates are the top-left corner of the square.
-pygame.draw.rect(screen, COLOUR_GREEN, [320, 240, 20,20])
+game_over = False
+while not game_over:
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_over = True
+        # Print the event to see what events are being generated
+        print(event)
 
-pygame.display.update()
+        if event.type == pygame.KEYDOWN:
+            # Check which key was pressed
+            if event.key == pygame.K_b:
+                colour = COLOUR_BLUE
+            elif event.key == pygame.K_r:
+                colour = COLOUR_RED
+            elif event.key == pygame.K_y:
+                colour = COLOUR_YELLOW
+            elif event.key == pygame.K_g:
+                colour = COLOUR_GREEN
+            elif event.key == pygame.K_o:
+                colour = COLOUR_ORANGE
+            
 
-# Wait for 5 seconds to see the drawn square
-# This is just to keep the window open for a while before quitting.
-pygame.time.delay(5000)
+    # Fill the background with black
+    screen.fill(COLOUR_BLACK)
+
+    # Draw a COLOUR_GREEN square (the snake) at the center of the screen
+    # The square is 20x20 pixels in size and is drawn at (320, 240) on the screen.
+    # The coordinates are the top-left corner of the square.
+    pygame.draw.rect(screen, colour, [320, 240, 20,20])
+
+    pygame.display.update()
+
+    # Limit the frame rate to 5 frames per second (FPS)
+    clock.tick(5)
 
 pygame.quit()

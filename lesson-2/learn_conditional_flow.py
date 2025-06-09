@@ -27,4 +27,27 @@ c. with the test inside the loop that sets a boolean variable to True
 """
 print("Game started")
 
-print("Game over")
+word = ""
+
+game_over = False  # This variable will control the loop
+while not game_over:
+    word = input("Enter a word (or type 'exit' to finish): ")
+    if word.lower() == 'exit':
+        game_over = True
+        #continue  # Skip the rest of the loop if 'exit' is entered
+    points = 0
+
+    for letter in word:
+        print(f"{letter.upper()}", end=' ')
+        if letter.lower() in 'aeiou':
+            points += 1  # Vowels score 1 point
+        elif letter.lower() == 'z':
+            points += 5 
+        elif letter.lower() == 'x':
+            points += 4
+        else:
+            points += 2  # Other consonants score 2 points
+
+    print(f"{word} has {points} points")
+
+print("\nGame over")
