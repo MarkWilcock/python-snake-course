@@ -1,19 +1,22 @@
 """
-Lesson 3: 
+Lesson 3: The snake moves and looks more like a snake!
 
-Step: Implement the key to colour mapping as a dictionary.
-
-Step: Make the snake move by pressing the arrow keys
-
-Step: Create a better geometry for the screen based on square size and number of squares.
-
-
+Steps
+1. Implement the key to colour mapping as a dictionary.
+2. Create a better geometry for the screen based on square size and number of squares.
+3. Make the snake move by pressing the arrow keys
+4. Implement the snake as a list of tuples representing its body segments.
 """
 
 import pygame
 
-# Set up constants for colours
-# Each colour is a tuple of red, green, blue  values.  Each value can range from 0 to 255.
+# TO DO: Set up "Chess board" squares geometry constants
+
+# TO DO: Set up initial position and movement variables for the snake
+
+# TO DO: Implement the snake as a list of tuples representing its body segments
+
+# Set up constants for colours.  Each colour is a tuple of red, green, blue  values.  Each value can range from 0 to 255.
 COLOUR_GREEN = (0, 255, 0)
 COLOUR_BLACK = (0, 0, 0)
 COLOUR_BLUE = (0, 0, 255)
@@ -21,11 +24,12 @@ COLOUR_RED = (255, 0, 0)
 COLOUR_YELLOW = (255, 255, 0)
 COLOUR_ORANGE = (255, 165, 0)
 
+# TO DO: add the KEY_COLOUR_MAP dictionary
+
 colour = COLOUR_GREEN  # Default colour for the snake
 
-# Initialize Pygame
+# Initialize Pygame, and the mixer module (which is used for sound)
 pygame.init()
-# Initialize the mixer module (which is used for sound)
 pygame.mixer.init()  
 
 # Create the game window
@@ -43,7 +47,7 @@ while not game_over:
         if event.type == pygame.QUIT:
             game_over = True
         # Print the event to see what events are being generated
-        print(event)
+        # print(event)
 
         if event.type == pygame.KEYDOWN:
             # Check which key was pressed
@@ -57,6 +61,10 @@ while not game_over:
                 colour = COLOUR_GREEN
             elif event.key == pygame.K_o:
                 colour = COLOUR_ORANGE
+
+            # TO DO: Set dx and dy values based on the arrow keys pressed
+
+            # TO DO: Update the snake's position based on the current direction
             
     # Fill the background with black
     screen.fill(COLOUR_BLACK)
@@ -64,6 +72,9 @@ while not game_over:
     # Draw a COLOUR_GREEN square (the snake) at the center of the screen
     # The square is 20x20 pixels in size and is drawn at (320, 240) on the screen.
     # The coordinates are the top-left corner of the square.
+
+    # TO DO: Draw the snake as a set of rectangles for each segment
+
     pygame.draw.rect(screen, colour, [320, 240, 20,20])
 
     pygame.display.update()
