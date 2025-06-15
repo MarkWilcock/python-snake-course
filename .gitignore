@@ -1,5 +1,7 @@
 # *-dev folders , where I test code for upcoming lesson
 *dev/
+_old/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
