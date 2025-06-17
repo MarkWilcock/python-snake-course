@@ -6,6 +6,7 @@ Steps
 2. Create a better geometry for the screen based on square size and number of squares.
 3. Make the snake move by pressing the arrow keys
 4. Implement the snake as a list of tuples representing its body segments.
+5. Done
 """
 
 import pygame
