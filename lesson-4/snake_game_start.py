@@ -1,41 +1,43 @@
-"""
-Lesson 4: 
+""" Lesson 4: 
 
 Objectives
-The snake moves properly at a constant speed and cannot turn back on itself.  
-The game is over when the snake moves off the screen.
+* The snake moves properly at a constant speed and cannot turn back on itself.  
+* The game is over when the snake moves off the screen.
+
+Done
+Renamed snake to snake_body since it is only one aspect of the snake's state.
+Refactor the colour, dx, dy variables to prepend with snake_ to indicate they are part of the snake's state.
 
 Steps
-1. Improve the geometry so that the snake is defined in terms of squares on a chess board (but one that has more than 8 by 8 squares).
-2. Detect when the snake moves off the chess board / screen and end the game.
-3. The snake moves at a constant speed in the direction of the arrow keys.
-4. The snake cannot turn back on itself.  It cannot start moving in the opposite direction immediately.
-"""
 
+Use integer division (//) to calculate the position of the snake on the chess board.
+
+Improve the geometry so that the snake is defined in terms of squares co-ordinates.
+- remove SQUARE_SIZE factor when creating the snake_body, snake_dx_snake_dy
+- add in SQUARE_SIZE factor when drawing the snake segments.
+
+Create the snake_body in a for loop to initialize it with three segments.
+
+Change the snake's movement so that it moves at a constant speed in the direction of the arrow keys
+and cannot turn back on itself i.e. it cannot start moving in the opposite direction immediately.
+
+in the event loop
+* remove the lines to reset snake_dx, snake_dy to 0 
+* in the if statement, set both snake_dx, snake_dy  on same line
+* move the code block to update the snake position to the while loop, so it is  executed once per frame.
+
+Detect when the snake moves off the screen and end the game.
+
+Write functions and refactor the code to make it more modular and easier to read.
+* draw_snake
+* change_snake_direction
+* change_snake_colour
+* is_snake_out_of_bounds
+
+"""
 import pygame
 
-FRAME_RATE = 5  # Frames per second (FPS) for the game
-
-# TO DO: Set up "Chess board" squares geometry constants
-SQUARE_SIZE = 20  # Size of each square in pixels
-NUM_SQUARES_X = 32  # Number of squares in the x direction  
-NUM_SQUARES_Y = 24  # Number of squares in the y direction
-# Calculate the width and height of the screen based on the number of squares and square size
-SCREEN_WIDTH = SQUARE_SIZE * NUM_SQUARES_X
-SCREEN_HEIGHT = SQUARE_SIZE * NUM_SQUARES_Y
-
-# TO DO: Set up initial position and movement variables for the snake
-snake_x = SCREEN_WIDTH / 2  # Start in the middle of the screen
-snake_y = SCREEN_HEIGHT / 2  # Start in the middle of the screen
-dx = 0  # Change in x (horizontal movement)
-dy = 0  # Change in y (vertical movement)
-
-# TO DO: Implement the snake as a list of tuples representing its body segments
-snake = [(snake_x, snake_y), (snake_x-SQUARE_SIZE, snake_y), (snake_x-2*SQUARE_SIZE, snake_y)]  # Start with one segment at the initial position
-
-print(f"Initial snake position: {snake}")
-
-# Set up constants for colours.  Each colour is a tuple of red, green, blue  values.  Each value can range from 0 to 255.
+# Set up constants for colours.  Each colour is a tuple of red, green, blue  values.
 COLOUR_GREEN = (0, 255, 0)
 COLOUR_BLACK = (0, 0, 0)
 COLOUR_BLUE = (0, 0, 255)
@@ -43,7 +45,6 @@ COLOUR_RED = (255, 0, 0)
 COLOUR_YELLOW = (255, 255, 0)
 COLOUR_ORANGE = (255, 165, 0)
 
-# TO DO: add the KEY_COLOUR_MAP dictionary
 KEY_COLOUR_MAP = {
     pygame.K_b: COLOUR_BLUE,
     pygame.K_r: COLOUR_RED,
@@ -51,22 +52,34 @@ KEY_COLOUR_MAP = {
     pygame.K_g: COLOUR_GREEN,
     pygame.K_o: COLOUR_ORANGE
 }
+FRAME_RATE = 5  # Frames per second (FPS) for the game
+# Set up "Chess board" squares geometry constants
+SQUARE_SIZE = 20  # Size of each square in pixels
+NUM_SQUARES_X = 32  # Number of squares in the x direction  
+NUM_SQUARES_Y = 24  # Number of squares in the y direction
+SCREEN_WIDTH = SQUARE_SIZE * NUM_SQUARES_X
+SCREEN_HEIGHT = SQUARE_SIZE * NUM_SQUARES_Y
 
-colour = COLOUR_GREEN  # Default colour for the snake
+# Set up initial position and movement variables for the snake
+snake_x = SCREEN_WIDTH / 2  # Start in the middle of the screen
+snake_y = SCREEN_HEIGHT / 2  # Start in the middle of the screen
+snake_dx = 0  # Change in x (horizontal movement)
+snake_dy = 0  # Change in y (vertical movement)
+
+# TO DO: Implement the snake as a list of tuples representing its body segments
+snake_body = [(snake_x, snake_y), (snake_x-SQUARE_SIZE, snake_y), (snake_x-2*SQUARE_SIZE, snake_y)]  # Start with one segment at the initial position
+print(f"Initial snake position: {snake_body}")
+snake_colour = COLOUR_GREEN  # Default colour for the snake
 
 # Initialize Pygame, and the mixer module (which is used for sound)
 pygame.init()
 pygame.mixer.init()  
 
-# Create the game window
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-# Set the title of the window
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) # Create the game window
 pygame.display.set_caption("Python Snake Game")
-
 clock = pygame.time.Clock()
-
 game_over = False
+
 while not game_over:
     # Handle events
     for event in pygame.event.get():
@@ -78,40 +91,37 @@ while not game_over:
         if event.type == pygame.KEYDOWN:
             # Check which key was pressed
             if event.key in KEY_COLOUR_MAP:
-                colour = KEY_COLOUR_MAP[event.key]
-                print(f"Colour changed to {colour}")
+                snake_colour = KEY_COLOUR_MAP[event.key]
+                print(f"Colour changed to {snake_colour}")
 
-            # TO DO: Set dx and dy values based on the arrow keys pressed
-            dx = 0
-            dy = 0
+            # Set dx and dy values based on the arrow keys pressed
+            snake_dx = 0
+            snake_dy = 0
             if event.key == pygame.K_UP:
-                dy = -SQUARE_SIZE
+                snake_dy = -SQUARE_SIZE
             elif event.key == pygame.K_DOWN:
-                dy = SQUARE_SIZE
+                snake_dy = SQUARE_SIZE
             elif event.key == pygame.K_LEFT:
-                dx = -SQUARE_SIZE
+                snake_dx = -SQUARE_SIZE
             elif event.key == pygame.K_RIGHT:
-                dx = SQUARE_SIZE
+                snake_dx = SQUARE_SIZE
 
-            # TO DO: Update the snake's position based on the current direction
-            if dx != 0 or dy != 0:
-                snake_x += dx
-                snake_y += dy
+            # Update the snake's position based on the current direction
+            if snake_dx != 0 or snake_dy != 0:
+                snake_x += snake_dx
+                snake_y += snake_dy
                 new_snake_head = (snake_x, snake_y)
-                snake.insert(0, new_snake_head)
-                snake.pop()
+                snake_body.insert(0, new_snake_head)
+                snake_body.pop()
             
     # Fill the background with black
     screen.fill(COLOUR_BLACK)
 
-    # TO DO: Draw the snake as a set of rectangles for each segment
+    # Draw the snake as a set of rectangles for each segment
+    for segment in snake_body:
+        pygame.draw.rect(screen, snake_colour, [segment[0], segment[1], SQUARE_SIZE, SQUARE_SIZE])
 
-    for segment in snake:
-        pygame.draw.rect(screen, colour, [segment[0], segment[1], SQUARE_SIZE,SQUARE_SIZE])
-
-    pygame.display.update()
-
-    # Limit the frame rate to 5 frames per second (FPS)
+    pygame.display.update()  
     clock.tick(FRAME_RATE)
 
 pygame.quit()
