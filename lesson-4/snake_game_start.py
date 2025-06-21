@@ -14,17 +14,18 @@ Use integer division (//) to calculate the position of the snake on the chess bo
 
 Improve the geometry so that the snake is defined in terms of squares co-ordinates.
 - remove SQUARE_SIZE factor when creating the snake_body, snake_dx_snake_dy
+- remove SQUARE_SIZE factor when updating the snake position
 - add in SQUARE_SIZE factor when drawing the snake segments.
 
 Create the snake_body in a for loop to initialize it with three segments.
 
 Change the snake's movement so that it moves at a constant speed in the direction of the arrow keys
-and cannot turn back on itself i.e. it cannot start moving in the opposite direction immediately.
-
-in the event loop
+In the event loop
 * remove the lines to reset snake_dx, snake_dy to 0 
 * in the if statement, set both snake_dx, snake_dy  on same line
-* move the code block to update the snake position to the while loop, so it is  executed once per frame.
+* move the code block to update the snake position to the while loop, so it is executed once per frame.
+
+Add guard test so that snake cannot turn back on itself i.e. it cannot start moving in the opposite direction immediately.
 
 Detect when the snake moves off the screen and end the game.
 
