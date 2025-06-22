@@ -1,6 +1,8 @@
 # *-dev folders , where I test code for upcoming lesson
 *dev/
 _old/
+# code used in creating YouTube videos
+*video.py 
 
 
 # Byte-compiled / optimized / DLL files
