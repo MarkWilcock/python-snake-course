@@ -62,7 +62,7 @@ while not game_over:
             elif event.key == pygame.K_o:
                 colour = COLOUR_ORANGE
 
-            # TO DO: Set dx and dy values based on the arrow keys pressed
+            # TO DO: Set snake_dx and snake_dy values based on the arrow keys pressed
 
             # TO DO: Update the snake's position based on the current direction
             
