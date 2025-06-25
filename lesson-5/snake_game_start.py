@@ -77,12 +77,11 @@ SCREEN_HEIGHT = SQUARE_SIZE * NUM_SQUARES_Y
 snake_dx = 1  # Change in x (horizontal movement)
 snake_dy = 0  # Change in y (vertical movement)
 
-# TO DO: Implement the snake as a list of tuples representing its body segments
+# Implement the snake as a list of tuples representing its body segments
 snake_body = []  # Initialize the snake body as an empty list
 for i in range(3):
     snake_body.append((NUM_SQUARES_X // 2 - i, NUM_SQUARES_Y // 2))  # Add segments to the left of the head
 
-#[(snake_x, snake_y), (snake_x-SQUARE_SIZE, snake_y), (snake_x-2*SQUARE_SIZE, snake_y)]  # Start with one segment at the initial position
 print(f"Initial snake position: {snake_body}")
 snake_colour = COLOUR_GREEN  # Default colour for the snake
 
