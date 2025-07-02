@@ -72,40 +72,47 @@ NUM_SQUARES_Y = 24  # Number of squares in the y direction
 SCREEN_WIDTH = SQUARE_SIZE * NUM_SQUARES_X
 SCREEN_HEIGHT = SQUARE_SIZE * NUM_SQUARES_Y
 
-# Set up initial position and movement variables for the snake
-snake_dx = 1  # Change in x (horizontal movement)
-snake_dy = 0  # Change in y (vertical movement)
+class Snake:
+    """A class representing the snake in the game."""
+    
+    def __init__(self,  colour=COLOUR_GREEN):
+        """Initialize the snake's body, colour, position, and direction."""
+        self.body = []  # Initialize the snake body as an empty list
+        for i in range(3):
+            self.body.append((NUM_SQUARES_X // 2 - i, NUM_SQUARES_Y // 2))  # Add segments to the left of the head
+        self.colour = colour  # Set the snake's colour
+        self.dx = 1  # Change in x (horizontal movement)
+        self.dy = 0  # Change in y (vertical movement)
 
-# Implement the snake as a list of tuples representing its body segments
-snake_body = []  # Initialize the snake body as an empty list
-for i in range(3):
-    snake_body.append((NUM_SQUARES_X // 2 - i, NUM_SQUARES_Y // 2))  # Add segments to the left of the head
+    def __str__(self):
+        """Return a string representation of the snake's body and position."""
+        return f"Snake(body={self.body}, colour={self.colour}, dx={self.dx}, dy={self.dy})"
+    
+    def move(self):
+        """Update the snake's position and body segments based on the current direction."""
+        old_head_x, old_head_y = self.body[0]  
+        new_head = (old_head_x + self.dx, old_head_y + self.dy)
+        self.body.insert(0, new_head)  # Add new head at the front
+        self.body.pop()  # Remove the last segment to maintain length
 
-print(f"Initial snake position: {snake_body}")
-snake_colour = COLOUR_GREEN  # Default colour for the snake
+    def is_out_of_bounds(self):
+        """Check if the snake's head is out of bounds of the board."""
+        x_pos, y_pos = self.body[0]
+        return (x_pos < 0 or x_pos >= NUM_SQUARES_X or 
+                y_pos < 0 or y_pos >= NUM_SQUARES_Y)
 
-# These functions will become methods of the Snake class
 
-def is_snake_out_of_bounds(snake_body):
-    """Check if the snake's head is out of bounds of the screen."""
-    x_pos, y_pos = snake_body[0]
-    return (x_pos < 0 or x_pos >= NUM_SQUARES_X or 
-            y_pos < 0 or y_pos >= NUM_SQUARES_Y)
+snake = Snake()  # Create an instance of the Snake class
 
-def move_snake(snake_dx, snake_dy, snake_body):
-    """Update the snake's position and body segments based on the current direction"""
-    old_head_x, old_head_y = snake_body[0]  
-    new_head = (old_head_x + snake_dx, old_head_y + snake_dy)
-    snake_body.insert(0, new_head)
-    snake_body.pop()
-    return snake_body
+print(f"Initial snake position: {snake.body}")
+
 
 # These functions will pass in the snake variable as an argument
 
-def draw_snake(SQUARE_SIZE, snake_body, snake_colour, screen):
+def draw_snake(SQUARE_SIZE, snake, screen):
     """Draw the snake on the screen as a series of rectangles."""
-    for segment in snake_body:
-        pygame.draw.rect(screen, snake_colour, [segment[0]*SQUARE_SIZE, segment[1]*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE])
+    for segment in snake.body:
+        pygame.draw.rect(screen, snake.colour, [segment[0]*SQUARE_SIZE, segment[1]*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE])
 
 def change_snake_direction(current_dx, current_dy, event):
     """Change the direction of the snake based on key presses."""
@@ -138,26 +145,26 @@ while not game_over:
         if event.type == pygame.KEYDOWN:
             # Check which key was pressed
             if event.key in KEY_COLOUR_MAP:
-                snake_colour = KEY_COLOUR_MAP[event.key]
-                print(f"Colour changed to {snake_colour}")
+                snake.colour = KEY_COLOUR_MAP[event.key]
+                print(f"Colour changed to {snake.colour}")
 
             # Set dx and dy values based on the arrow keys pressed
-            snake_dx, snake_dy = change_snake_direction(snake_dx, snake_dy, event)
+            snake.dx, snake.dy = change_snake_direction(snake.dx, snake.dy, event)
             
     # Check if the snake is out of bounds
-    if is_snake_out_of_bounds(snake_body):
+    if snake.is_out_of_bounds():
         print("Game Over! The snake has gone out of bounds.")
         game_over = True
         continue
 
     # Update the snake's position based on the current direction
-    snake_body = move_snake(snake_dx, snake_dy, snake_body)
+    snake.move()
 
     # Fill the background with black
     screen.fill(COLOUR_BLACK)
 
     # Draw the snake as a set of rectangles for each segment
-    draw_snake(SQUARE_SIZE, snake_body, snake_colour, screen)
+    draw_snake(SQUARE_SIZE, snake, screen)
 
     pygame.display.update()  
     clock.tick(FRAME_RATE)
