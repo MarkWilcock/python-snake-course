@@ -2,7 +2,8 @@
 *dev/
 _old/
 # code used in creating YouTube videos
-*video.py 
+*video.py
+*dev.py
 
 
 # Byte-compiled / optimized / DLL files
