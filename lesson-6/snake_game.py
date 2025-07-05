@@ -9,12 +9,13 @@ When the head of the snake collides with the food
 
 Notes
 *****
-We need to import the random module 
 A short sound file of a snake eating food is in the resources folder
 
 Steps
 *****
 These are the steps to complete the code in this lesson:
+
+Import the random module
 
 Create a Food class:
 - with property position, a tuple of (x, y) coordinates
@@ -25,13 +26,14 @@ Create a Food class:
 Extend our Snake class so that the snake can eat some food and grow
 - add a property length (and set to 3 initially)
 - add a method increment_length
-- change the move method so that it only pops the last segment if the snake has not eaten food 
-  i.e. if the length of the body is greater then the length property
-- add a method eat() that plays the sound file
+- change the move method so that it only pops the last segment if the length of the body is greater then the length property
+- add a method eat() that plays the sound file and increments the snake's length property
   
-Create functions to:
-- draw the food on the screen
-- check for collision between the snake's head and the food i.e. these are in the same position
+Create an instance of the Food class at the start of the game
+
+Create functions :
+- draw_food: draw the food on the screen
+- check_collision: check for collision between the snake's head and the food i.e. these are in the same position
   and if so, increment the snake's length and reposition the food randomly on the board
 """
 import pygame
