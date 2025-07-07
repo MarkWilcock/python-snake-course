@@ -23,18 +23,22 @@ Create a Food class:
 - the __init__ method uses the set_random_position method to initialize the food's position
 - a __str__ method to return a string representation of the food's position
 
+Create an instance of the Food class at the start of the game
+
+Create function draw_food: draw the food on the screen
+
 Extend our Snake class so that the snake can eat some food and grow
 - add a property length (and set to 3 initially)
 - add a method increment_length
 - change the move method so that it only pops the last segment if the length of the body is greater then the length property
 - add a method eat() that plays the sound file and increments the snake's length property
-  
-Create an instance of the Food class at the start of the game
 
-Create functions :
-- draw_food: draw the food on the screen
-- check_collision: check for collision between the snake's head and the food i.e. these are in the same position
-  and if so, increment the snake's length and reposition the food randomly on the board
+Create function check_collision: check for collision between the snake's head and the food 
+i.e. these are in the same position 
+If  so, 
+- the snake eats the food
+- reposition the food randomly on the board
+- increment the snake's length 
 """
 import pygame
 
@@ -151,14 +155,14 @@ while not game_over:
             # Set dx and dy values based on the arrow keys pressed
             snake.dx, snake.dy = change_snake_direction(snake.dx, snake.dy, event)
             
+    # Update the snake's position based on the current direction
+    snake.move()
+
     # Check if the snake is out of bounds
     if snake.is_out_of_bounds():
         print("Game Over! The snake has gone out of bounds.")
         game_over = True
         continue
-
-    # Update the snake's position based on the current direction
-    snake.move()
 
     # Fill the background with black
     screen.fill(COLOUR_BLACK)

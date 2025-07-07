@@ -27,6 +27,8 @@ Create an instance of the Food class at the start of the game
 
 Create function draw_food: draw the food on the screen
 
+Create an instance of the Food class at the start of the game
+
 Extend our Snake class so that the snake can eat some food and grow
 - add a property length (and set to 3 initially)
 - add a method increment_length
@@ -41,6 +43,7 @@ If  so,
 - increment the snake's length 
 """
 import pygame
+import random
 
 # Set up constants for colours.  Each colour is a tuple of red, green, blue  values.
 COLOUR_GREEN = (0, 255, 0)
@@ -76,6 +79,22 @@ SCREEN_HEIGHT = SQUARE_SIZE * NUM_SQUARES_Y
 
 EAT_SOUND_FILE = "resources/snake_eat.mp3"  # Path to the sound file for eating food
 
+class Food:
+    """A class to represent food in the game."""
+    
+    def __init__(self):
+        """Initialize the food's position randomly within the board limits."""
+        self.set_random_position()
+
+    def set_random_position(self):
+        """Set the food's position to a random square on the board."""
+        self.position = (random.randint(0, NUM_SQUARES_X - 1), random.randint(0, NUM_SQUARES_Y - 1))
+        self.colour = COLOUR_RED  # Food is always red
+
+    def __str__(self):
+        """Return a string representation of the food's position."""
+        return f"Food(position={self.position})"
+
 class Snake:
     """A class to represent the snake in the game."""
     
@@ -84,6 +103,7 @@ class Snake:
         self.colour = colour
         self.dx = 1  # Change in x (horizontal movement)
         self.dy = 0  # Change in y (vertical movement)
+        self.length = 3  # Initial length of the snake
         
         initial_position = (NUM_SQUARES_X // 2, NUM_SQUARES_Y // 2)  # Start in the middle of the board
         
@@ -100,13 +120,23 @@ class Snake:
         old_head_x, old_head_y = self.body[0]
         new_head = (old_head_x + self.dx, old_head_y + self.dy)
         self.body.insert(0, new_head)  # Add new head at the front
-        self.body.pop()  # Remove the last segment
+        if len(self.body) > self.length:
+            self.body.pop()  # Remove the last segment
+
+    def increment_length(self):
+        """Increment the snake's length by one."""
+        self.length += 1
 
     def is_out_of_bounds(self):
         """Check if the snake's head is out of bounds of the screen."""
         x_pos, y_pos = self.body[0]
         return (x_pos < 0 or x_pos >= NUM_SQUARES_X or 
                 y_pos < 0 or y_pos >= NUM_SQUARES_Y)
+    
+    def eat(self):
+        """Play the eating sound and increment the snake's length."""
+        pygame.mixer.music.load(EAT_SOUND_FILE)
+        pygame.mixer.music.play(0)
         
 # Functions
 
@@ -126,9 +156,21 @@ def change_snake_direction(current_dx, current_dy, event):
         current_dx, current_dy = new_dx, new_dy        
     return current_dx, current_dy
 
+def draw_food(food, screen):
+    """Draw the food on the screen."""
+    food_x, food_y = food.position
+    pygame.draw.rect(screen, food.colour, [food_x * SQUARE_SIZE, food_y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE])
+
+def check_collision(snake, food):
+    """Check for collision between the snake's head and the food."""
+    if snake.body[0] == food.position:
+        # If the snake's head is at the same position as the food, return True
+        return True
+    return False
 # Initialise the snake, food and set up game variables
 
 snake = Snake()  # Create an instance of the Snake class
+food = Food()  # Create an instance of the Food class
 
 pygame.init()
 pygame.mixer.init()  
@@ -158,6 +200,12 @@ while not game_over:
     # Update the snake's position based on the current direction
     snake.move()
 
+    if check_collision(snake, food):
+        # If the snake's head collides with the food, increment the snake's length and reposition the food
+        snake.eat()
+        snake.increment_length()  # Increment the snake's length
+        food.set_random_position()
+
     # Check if the snake is out of bounds
     if snake.is_out_of_bounds():
         print("Game Over! The snake has gone out of bounds.")
@@ -169,6 +217,7 @@ while not game_over:
 
     # Draw the snake as a set of rectangles for each segment
     draw_snake(SQUARE_SIZE, snake, screen)
+    draw_food(food, screen)  # Draw the food on the screen
 
     pygame.display.update()  
     clock.tick(FRAME_RATE)
